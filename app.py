@@ -7,11 +7,26 @@ from datetime import datetime
 # UI THEME + HEADER 
 import os
 
+# Paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+LOGO_PATH = os.path.join(BASE_DIR, "logo.png")
+
+MODEL_PATH = os.path.join(
+    BASE_DIR,
+    "model",
+    "final_best_yolov8m_tuned.pt"
+)
+
+CALIB_PATH = os.path.join(BASE_DIR, "calibration.txt")
+
+OUT_DIR = "/tmp/outputs"
+
+if not os.path.exists(OUT_DIR):
+    os.makedirs(OUT_DIR)
+    
 #  Page Setup 
 st.set_page_config(page_title="AI-Powered Follicle Monitoring & Analysis", page_icon="🩺", layout="wide")
-
-# Adjust your logo path if needed
-LOGO_PATH = os.path.join(os.getcwd(), "logo.png")
 
 st.markdown("""
 <style>
@@ -100,14 +115,6 @@ video {
 # HEADER 
 st.markdown("<div class='title-bar'>🧠 AI-Powered Follicle Monitoring & Analysis</div>", unsafe_allow_html=True)
 
-# Paths 
-MODEL_PATH = "model/final_best_yolov8m_tuned.pt"
-CALIB_PATH = "calibration.txt"
-OUT_DIR = "/tmp/outputs"
-
-if not os.path.exists(OUT_DIR):
-    os.makedirs(OUT_DIR)
-
 # Calibration
 try:
     with open(CALIB_PATH, "r") as f:
@@ -125,6 +132,12 @@ def load_model():
     return model
 
 st.sidebar.success("✅ Model Loaded Successfully")
+
+st.write("Current Directory:", os.getcwd())
+st.write("BASE_DIR:", BASE_DIR)
+st.write("MODEL_PATH:", MODEL_PATH)
+st.write("Model Exists:", os.path.exists(MODEL_PATH))
+
 model = load_model()
 
 #  Helper 
