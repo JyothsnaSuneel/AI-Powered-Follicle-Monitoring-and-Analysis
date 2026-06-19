@@ -12,11 +12,23 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 LOGO_PATH = os.path.join(BASE_DIR, "logo.png")
 
+import gdown
+
 MODEL_PATH = os.path.join(
     BASE_DIR,
     "model",
     "final_best_yolov8m_tuned.pt"
 )
+
+# Download model if not present
+if not os.path.exists(MODEL_PATH):
+    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+
+    file_id = "1GJdIBwi7ieubyA4pYCS2JxXhk1dVPKeJ"
+    url = f"https://drive.google.com/uc?id={file_id}"
+
+    st.info("Downloading YOLO model...")
+    gdown.download(url, MODEL_PATH, quiet=False)
 
 CALIB_PATH = os.path.join(BASE_DIR, "calibration.txt")
 
