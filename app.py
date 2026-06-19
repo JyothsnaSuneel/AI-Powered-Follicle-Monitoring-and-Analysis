@@ -103,8 +103,10 @@ st.markdown("<div class='title-bar'>🧠 AI-Powered Follicle Monitoring & Analys
 # Paths 
 MODEL_PATH = "model/final_best_yolov8m_tuned.pt"
 CALIB_PATH = "calibration.txt"
-OUT_DIR = "outputs"
-os.makedirs(OUT_DIR, exist_ok=True)
+OUT_DIR = "/tmp/outputs"
+
+if not os.path.exists(OUT_DIR):
+    os.makedirs(OUT_DIR)
 
 # Calibration
 try:
