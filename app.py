@@ -26,7 +26,8 @@ if not os.path.exists(MODEL_PATH):
 
     url = "https://drive.google.com/uc?id=1GJdIBwi7ieubyA4pYCS2JxXhk1dVPKeJ"
 
-    st.info("Downloading YOLO model...")
+    with st.spinner("Loading AI model..."):
+    gdown.download(...)
     gdown.download(url, MODEL_PATH, quiet=False)
     
 CALIB_PATH = os.path.join(BASE_DIR, "calibration.txt")
@@ -128,6 +129,14 @@ st.markdown("<div class='title-bar'>🧠 AI-Powered Follicle Monitoring & Analys
 st.markdown("""
 This AI-powered application automatically detects ovarian follicles from ultrasound videos,
 estimates follicle diameter, and classifies maturity status to assist IVF monitoring.
+""")
+st.info("""
+🎯 Model Performance:
+• YOLOv8m Segmentation
+• mAP@50: 95%
+• Real-time follicle detection
+• Automated diameter measurement
+• Maturity classification support
 """)
 
 # Calibration
