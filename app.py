@@ -3,17 +3,14 @@ from ultralytics import YOLO
 import cv2, os, tempfile, torch
 import numpy as np, pandas as pd
 from datetime import datetime
-
-# UI THEME + HEADER 
+import gdown
 import os
 
+# UI THEME + HEADER 
 # Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 LOGO_PATH = os.path.join(BASE_DIR, "logo.png")
-
-import gdown
-import os
 
 MODEL_PATH = os.path.join(
     BASE_DIR,
@@ -136,6 +133,9 @@ st.info("""
 • Automated diameter measurement
 • Maturity classification support
 """)
+st.warning(
+    "⚠️ For research and educational purposes only. Not intended for clinical diagnosis."
+)
 
 # Calibration
 try:
@@ -259,29 +259,56 @@ analyze = st.button("🔍 Analyze Video")
 
 if uploaded_video and analyze:
     st.info("⏳ Processing video — please wait 2–3 minutes...")
+
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tfile:
         tfile.write(uploaded_video.read())
         temp_video_path = tfile.name
 
     with st.spinner("Analyzing follicles..."):
-        output_path, csv_path, df = analyze_video(temp_video_path, model, pix_per_mm)
+        output_path, csv_path, df = analyze_video(
+            temp_video_path,
+            model,
+            pix_per_mm
+        )
 
     st.success("✅ Analysis Complete!")
 
-    # Display processed video
+    st.markdown("### 🩺 Patient Information")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.write("**Patient Name:**", patient_name)
+        st.write("**Patient ID:**", patient_id)
+
+    with col2:
+        st.write("**Clinician:**", clinician)
+        st.write("**Exam Date:**", exam_date)
+
     with open(output_path, "rb") as f:
         st.video(f.read())
 
-    # Download buttons
     with open(output_path, "rb") as f:
-        st.download_button("⬇️ Download Annotated Ultrasound Video", f.read(), file_name=os.path.basename(output_path), mime="video/mp4")
+        st.download_button(
+            "⬇️ Download Annotated Ultrasound Video",
+            f.read(),
+            file_name=os.path.basename(output_path),
+            mime="video/mp4"
+        )
 
     st.subheader("📊 Results CSV")
     st.dataframe(df)
-    st.download_button("⬇ Download CSV Results", data=df.to_csv(index=False), file_name=os.path.basename(csv_path))
+
+    st.download_button(
+        "⬇️ Download Follicle Analysis Report",
+        data=df.to_csv(index=False),
+        file_name=os.path.basename(csv_path)
+    )
 
 else:
-    st.info("📤 Upload your ultrasound video and click **Analyze Video** to start.")
+    st.info(
+        "📤 Upload your ultrasound video and click **Analyze Video** to start."
+    )
 
 #  FOOTER 
 st.markdown("""
