@@ -13,6 +13,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGO_PATH = os.path.join(BASE_DIR, "logo.png")
 
 import gdown
+import os
 
 MODEL_PATH = os.path.join(
     BASE_DIR,
@@ -20,16 +21,14 @@ MODEL_PATH = os.path.join(
     "final_best_yolov8m_tuned.pt"
 )
 
-# Download model if not present
 if not os.path.exists(MODEL_PATH):
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
 
-    file_id = "1GJdIBwi7ieubyA4pYCS2JxXhk1dVPKeJ"
-    url = f"https://drive.google.com/uc?id={file_id}"
+    url = "https://drive.google.com/uc?id=1GJdIBwi7ieubyA4pYCS2JxXhk1dVPKeJ"
 
     st.info("Downloading YOLO model...")
     gdown.download(url, MODEL_PATH, quiet=False)
-
+    
 CALIB_PATH = os.path.join(BASE_DIR, "calibration.txt")
 
 OUT_DIR = "/tmp/outputs"
@@ -110,7 +109,7 @@ video {
 
 /* Footer */
 .footer {
-    position: fixed;
+    position: relative;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -126,6 +125,10 @@ video {
 
 # HEADER 
 st.markdown("<div class='title-bar'>🧠 AI-Powered Follicle Monitoring & Analysis</div>", unsafe_allow_html=True)
+st.markdown("""
+This AI-powered application automatically detects ovarian follicles from ultrasound videos,
+estimates follicle diameter, and classifies maturity status to assist IVF monitoring.
+""")
 
 # Calibration
 try:
@@ -143,14 +146,8 @@ def load_model():
     model.to(device)
     return model
 
-st.sidebar.success("✅ Model Loaded Successfully")
-
-st.write("Current Directory:", os.getcwd())
-st.write("BASE_DIR:", BASE_DIR)
-st.write("MODEL_PATH:", MODEL_PATH)
-st.write("Model Exists:", os.path.exists(MODEL_PATH))
-
 model = load_model()
+st.sidebar.success("✅ Model Loaded Successfully")
 
 #  Helper 
 def classify_maturity(d_mm):
@@ -270,7 +267,7 @@ if uploaded_video and analyze:
 
     # Download buttons
     with open(output_path, "rb") as f:
-        st.download_button("⬇ Download Processed Video", f.read(), file_name=os.path.basename(output_path), mime="video/mp4")
+        st.download_button("⬇️ Download Annotated Ultrasound Video", f.read(), file_name=os.path.basename(output_path), mime="video/mp4")
 
     st.subheader("📊 Results CSV")
     st.dataframe(df)
