@@ -26,8 +26,6 @@ if not os.path.exists(MODEL_PATH):
 
     url = "https://drive.google.com/uc?id=1GJdIBwi7ieubyA4pYCS2JxXhk1dVPKeJ"
 
-    with st.spinner("Loading AI model..."):
-    gdown.download(...)
     gdown.download(url, MODEL_PATH, quiet=False)
     
 CALIB_PATH = os.path.join(BASE_DIR, "calibration.txt")
